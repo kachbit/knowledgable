@@ -76,8 +76,10 @@ class SpartanStrong {
                 this.success = true;
             } else {
                 this.success = false;
+                if (!document.querySelector('#outp').innerText) {
                 document.querySelector('#outp').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
-            }
+                }
+          }
 
         })
     }
