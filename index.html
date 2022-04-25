@@ -7,45 +7,70 @@
 
 <form method="post">
 <input type="text" autocomplete="off" autocapitalize="off" id="maIN" name="main" placeholder="..." style="outline:0px none">
-
 </form>
-<button id="sub" onclick="exec()">debug</button>
+<button id="sub" onclick="exec();">Find</button>
+
+<div id="results" style="display:none">
 <div id="outp"></div>
-<div id="vids-ka" class="vids"></div>
+
+<br>
+<div id="outp1" style="display: inline-block;vertical-align: middle;">
+
+    <div id="imgcontainer" style="display: inline-block;float:right;margin-left:10px;margin-top:10px;margin-bottom:10px"><img id="ouip" onclick="window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'"></div>
+    <div id="txt1">
+    </div>
+</div> 
+
+
+
+<br><br><br>
+<div style="margin:20px">.</div>
+<div id="vids-ka" onclick="b.YTvid(v);" style="margin-top:10px" class="vids"></div>
 
 <div id="vids-ku" class="vids"></div>
 
-<div id="vids-cr" class="vids"></div>
-<br>
-<div id="outp1" style="display: inline-block;vertical-align: middle;"></div> 
-<img id="ouip1" style="width:500px" onclick="window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'"><br>
-<div id="imgcontainer" style="display: inline-block;vertical-align: middle;overflow: hidden;"><img id="ouip" onclick="window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'"></div>
-<br><br>
+<div id="vids-cr" onclick="b.YTvid(v);" class="vids"></div>
 
+</div>
 
 <script>
+var b;
+var v;
 function exec() {
-    var v = encodeURIComponent(document.querySelector('#maIN').value);
-    var b = new SpartanStrong()
+    try {
+        document.querySelector('#ouip1').src = ''
+    } catch {}
+    document.querySelector('#ouip').src = ''
+    
+    v = encodeURIComponent(document.querySelector('#maIN').value.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '));
+    console.log(v)
+    b = new SpartanStrong()
     b.WAshort(v);
     b.WAimg(v);
     b.WPtext(v);
     b.WPimg(v);
-    b.YTvid(v);
+    document.querySelector('#results').style.display = 'block';
 }
 class SpartanStrong {
     constructor() {
         this.endpoint = "https://api.allorigins.win/get?charset=UFT-8&url=";
         this.WAkey = "4A6Q8K-PEV9UGHUQX";
+        this.image = document.createElement('img')
+        this.image.style = "width:500px;margin:8px;border-radius:5px"
+        this.image.id = "ouip1"
+        this.image.setAttribute("onclick", "window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'");
+        this.success = null;
     }
     WAshort(encodedINPUT) {
         this.Shortendpoint = `https://api.wolframalpha.com/v1/spoken?appid=${this.WAkey}&i=`;
         this.URLgenerated = this.endpoint + encodeURIComponent(this.Shortendpoint) + encodedINPUT;
         console.log(this.URLgenerated)
         fetch(this.URLgenerated).then(response => response.json()).then((data) => {
-            if(data.contents !== "Wolfram Alpha did not understand your input") {
-                document.querySelector('#outp').innerText = data.contents
+            if(data.contents !== "Wolfram Alpha did not understand your input" && data.contents != "No spoken result available") {
+                document.querySelector('#outp').innerText = data.contents;
+                this.success = true;
             } else {
+                this.success = false;
                 document.querySelector('#outp').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
             }
             
@@ -56,7 +81,6 @@ class SpartanStrong {
         this.URLgenerated = this.Shortendpoint + encodedINPUT;
         console.log(this.URLgenerated)
         document.querySelector('#ouip').src = this.URLgenerated;
-
     }
     WPtext(encodedINPUT) {
         this.Shortendpoint = `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=7&prop=extracts&titles=`;
@@ -64,9 +88,17 @@ class SpartanStrong {
         console.log(this.URLgenerated)
         fetch(this.URLgenerated).then(response => response.json()).then((data) => {
             if(data.query.pages[Object.keys(data.query.pages)[0]].extract) {
-                document.querySelector('#outp1').innerHTML = data.query.pages[Object.keys(data.query.pages)[0]].extract
+                document.querySelector('#txt1').innerHTML = data.query.pages[Object.keys(data.query.pages)[0]].extract;
+                if(!this.success) {
+                    if(document.querySelector('#txt1').children[0].innerText.length > document.querySelector('#txt1').children[1].innerText.length) {
+                        document.querySelector('#outp').innerText = document.querySelector('#txt1').children[0].innerText
+                    } else {
+                        document.querySelector('#outp').innerText = document.querySelector('#txt1').children[1].innerText
+                    }
+                }
+                document.querySelector('#txt1').children[1].appendChild(this.image)
             } else {
-                document.querySelector('#outp1').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
+                document.querySelector('#txt1').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
             }
         })
     }
@@ -75,7 +107,8 @@ class SpartanStrong {
         this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + this.Shortendpoint + encodedINPUT;
         console.log(this.URLgenerated)
         fetch(this.URLgenerated).then(response => response.json()).then((data) => {
-            document.querySelector('#ouip1').src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
+            this.image.src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
+       //     document.querySelector('#ouip1').src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
         })
         
     }
@@ -110,6 +143,20 @@ class SpartanStrong {
 }
 </script>
 <style>
+@media only screen and (max-width: 850px) {
+    #imgcontainer {
+        float:left !important;
+        margin-right:100% !important;
+    }
+    #ouip1 {
+        float:left !important;
+        margin-right:100% !important;
+    }
+} 
+#ouip1 {
+    display:block !important;
+}
+
 body {
     background:#202636;
 }
@@ -128,6 +175,7 @@ div.vids {
     padding: 15px;
     margin: 20px;
     border-radius: 4px;
+    cursor:pointer;
 }
 div#vids-ka:before {
     content: "Khan Academy videos";
@@ -173,7 +221,7 @@ div#outp:before {
 div#outp1 {
     display: inline-block;
     vertical-align: middle;
-    width:calc(100% - 600px);
+    width:calc(100% - 80px);
     margin-left:20px;
     background: #333b48;
     color: #f5f5f5;
@@ -191,7 +239,7 @@ div#outp1:before {
 #ouip {
     border: 2px solid slategrey;
     border-radius: 10px;
-    width:500px;
+    max-width:500px;
     float:right;
 }
 
