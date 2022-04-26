@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel="icon" href="fav.png">
-    <link rel="apple-touch-icon" href="fav.png">
+    <link rel="icon" href="fav1.png">
+    <link rel="apple-touch-icon" href="fav1.png">
     <meta name="apple-mobile-web-app-title" content="knowledgable">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>knowledgable</title>
@@ -32,10 +32,10 @@
 <div style="margin:20px">.</div>
 <div id="vids-ka" onclick="b.YTvid(v);" style="margin-top:10px" class="vids"></div>
 
-<div id="vids-ku" class="vids"></div>
+<!-- <div id="vids-ku" class="vids"></div>
 
 <div id="vids-cr" onclick="b.YTvid(v);" class="vids"></div>
-
+ -->
 </div>
 
 <script>
@@ -120,7 +120,7 @@ class SpartanStrong {
 
     }
     YTvid(encodedINPUT) {
-        fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UC4a-Gbdw7vOaccHmFo40b9g&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
+        fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
             for(var vid in data.items) {
                 var i = document.createElement("iframe");
                 i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
@@ -138,14 +138,14 @@ class SpartanStrong {
         //     }
         // });
 
-        fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCX6b17PVsYBQ0ip5gyeme-Q&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
-            for(var vid in data.items) {
-                var i = document.createElement("iframe");
-                i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
-                i.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture")
-                document.querySelector("#vids-cr").appendChild(i)
-            }
-        });
+//         fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCX6b17PVsYBQ0ip5gyeme-Q&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
+//             for(var vid in data.items) {
+//                 var i = document.createElement("iframe");
+//                 i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
+//                 i.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture")
+//                 document.querySelector("#vids-cr").appendChild(i)
+//             }
+//         });
     }
 }
 </script>
@@ -185,7 +185,7 @@ div.vids {
     cursor:pointer;
 }
 div#vids-ka:before {
-    content: "Khan Academy videos";
+    content: "Videos";
     color: #b5bdd3;
     top: 10px;
     display: block;
