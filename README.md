@@ -1,6 +1,6 @@
-# [knowledgable](kachbit.github.io/knowledgable/)
+# [knowledgable](https://kachbit.github.io/knowledgable/)
 Knowledge base for any topic with visuals, images, descriptions, videos.
-[kachbit.github.io/knowledgable/](kachbit.github.io/knowledgable/)
+[kachbit.github.io/knowledgable/](https://kachbit.github.io/knowledgable/)
 
 **Instructions:** <br>
 * input any topic, person, place, anything.
