@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="icon" href="fav1.png">
+    <link rel="apple-touch-icon" href="fav1.png">
+    <meta name="apple-mobile-web-app-title" content="knowledgable">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>knowledgable</title>
+</head>
+<body>
+
+<form method="post">
+<input type="text" autocomplete="off" autocapitalize="off" id="maIN" name="main" placeholder="..." style="outline:0px none">
+</form>
+<button id="sub" onclick="exec();">Find</button>
+
+<div id="results" style="display:none">
+<div id="outp"></div>
+
+<br>
+<div id="outp1" style="display: inline-block;vertical-align: middle;">
+
+    <div id="imgcontainer" style="display: inline-block;float:right;margin-left:10px;margin-top:10px;margin-bottom:10px"><img id="ouip" onclick="window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'"></div>
+    <div id="txt1">
+    </div>
+</div> 
+
+
+
+<br><br><br>
+<div style="margin:20px">.</div>
+<div id="vids-ka" onclick="b.YTvid(v);" style="margin-top:10px" class="vids"></div>
+
+<!-- <div id="vids-ku" class="vids"></div>
+<div id="vids-cr" onclick="b.YTvid(v);" class="vids"></div>
+ -->
+</div>
+
+<script>
+var b;
+var v;
+function exec() {
+    try {
+        document.querySelector('#ouip1').src = ''
+    } catch {}
+    document.querySelector('#ouip').src = ''
+   // document.querySelector('#outp').innerText = '';
+   // document.querySelector('#outp1').innerText = '';
+    document.querySelector("#vids-ka").innerHTML = '';
+    v = encodeURIComponent(document.querySelector('#maIN').value.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '));
+    console.log(v)
+    b = new SpartanStrong()
+    b.WAshort(v);
+    b.WAimg(v);
+    b.WPtext(v);
+    b.WPimg(v);
+    document.querySelector('#results').style.display = 'block';
+}
+class SpartanStrong {
+    constructor() {
+        this.endpoint = "https://api.allorigins.win/get?charset=UFT-8&url=";
+        this.WAkey = "4A6Q8K-PEV9UGHUQX";
+        this.image = document.createElement('img')
+        this.image.style = "width:500px;margin:8px;border-radius:5px"
+        this.image.id = "ouip1"
+        this.image.setAttribute("onclick", "window.open('about:blank').document.body.outerHTML = '<image src='+this.src+'>'");
+        this.success = null;
+    }
+    WAshort(encodedINPUT) {
+        this.Shortendpoint = `https://api.wolframalpha.com/v1/spoken?appid=${this.WAkey}&i=`;
+        this.URLgenerated = this.endpoint + encodeURIComponent(this.Shortendpoint) + encodedINPUT;
+        console.log(this.URLgenerated)
+        fetch(this.URLgenerated).then(response => response.json()).then((data) => {
+            if(data.contents !== "Wolfram Alpha did not understand your input" && data.contents != "No spoken result available") {
+                document.querySelector('#outp').innerText = data.contents;
+                this.success = true;
+            } else {
+                this.success = false;
+                if (!document.querySelector('#outp').innerText) {
+                document.querySelector('#outp').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
+                }
+          }
+
+        })
+    }
+    WAimg(encodedINPUT) {
+        this.Shortendpoint = `https://api.wolframalpha.com/v1/simple?background=2A364A&foreground=white&layout=labelbar&appid=${this.WAkey}&i=`;
+        this.URLgenerated = this.Shortendpoint + encodedINPUT;
+        console.log(this.URLgenerated)
+        document.querySelector('#ouip').src = this.URLgenerated;
+    }
+    WPtext(encodedINPUT) {
+        this.Shortendpoint = `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=7&prop=extracts&titles=`;
+        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + this.Shortendpoint + encodedINPUT;
+        console.log(this.URLgenerated)
+        fetch(this.URLgenerated).then(response => response.json()).then((data) => {
+            if(data.query.pages[Object.keys(data.query.pages)[0]].extract) {
+                document.querySelector('#txt1').innerHTML = data.query.pages[Object.keys(data.query.pages)[0]].extract;
+                if(!this.success) {
+                    if(document.querySelector('#txt1').children[0].innerText.length > document.querySelector('#txt1').children[1].innerText.length) {
+                        document.querySelector('#outp').innerText = document.querySelector('#txt1').children[0].innerText
+                    } else {
+                        document.querySelector('#outp').innerText = document.querySelector('#txt1').children[1].innerText
+                    }
+                }
+                document.querySelector('#txt1').children[1].appendChild(this.image)
+            } else {
+                document.querySelector('#txt1').innerText = 'The algoirthm couldnt find an answer. Check your spelling.'
+            }
+        })
+    }
+    WPimg(encodedINPUT) {
+        this.Shortendpoint = `https://en.wikipedia.org/w/api.php?action=query&redirects=7&prop=pageimages&format=json&piprop=original&titles=`;
+        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + this.Shortendpoint + encodedINPUT;
+        console.log(this.URLgenerated)
+        fetch(this.URLgenerated).then(response => response.json()).then((data) => {
+            this.image.src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
+       //     document.querySelector('#ouip1').src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
+        })
+
+    }
+    YTvid(encodedINPUT) {
+        fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
+            for(var vid in data.items) {
+                var i = document.createElement("iframe");
+                i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
+                i.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture")
+                document.querySelector("#vids-ka").appendChild(i)
+            }
+        });
+        // lets disable for now..
+        // fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCsXVk37bltHxD1rDPwtNM8Q&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
+        //     for(var vid in data.items) {
+        //         var i = document.createElement("iframe");
+        //         i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
+        //         i.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture")
+        //         document.querySelector("#vids-ku").appendChild(i)
+        //     }
+        // });
+
+//         fetch('https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCX6b17PVsYBQ0ip5gyeme-Q&type=video&key=AIzaSyCbJy9vITXCdvXLiF2OR5N88cWwk6E_5Cw&q='+encodedINPUT).then(response => response.json()).then((data) => {
+//             for(var vid in data.items) {
+//                 var i = document.createElement("iframe");
+//                 i.setAttribute("src","https://www.youtube.com/embed/"+data.items[vid].id.videoId)
+//                 i.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture")
+//                 document.querySelector("#vids-cr").appendChild(i)
+//             }
+//         });
+    }
+}
+</script>
+<style>
+@media only screen and (max-width: 850px) {
+    #imgcontainer {
+        float:left !important;
+        margin-right:100% !important;
+    }
+    #ouip1 {
+        float:left !important;
+        margin-right:100% !important;
+    }
+} 
+#ouip1 {
+    display:block !important;
+}
+
+body {
+    background:#202636;
+}
+div#outp {
+    background: #333b48;
+    color: white;
+    font-family: arial;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 4px;
+}
+div.vids {
+    background: #333b48;
+    color: white;
+    font-family: arial;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 4px;
+    cursor:pointer;
+}
+div#vids-ka:before {
+    content: "Videos";
+    color: #b5bdd3;
+    top: 10px;
+    display: block;
+    padding-bottom: 10px;
+    font-family: monospace;
+}
+div#vids-cr:before {
+    content: "CrashCourse videos";
+    color: #b5bdd3;
+    top: 10px;
+    display: block;
+    padding-bottom: 10px;
+    font-family: monospace;
+}
+div#vids-ku:before {
+    content: "Kurz videos";
+    color: #b5bdd3;
+    top: 10px;
+    display: block;
+    padding-bottom: 10px;
+    font-family: monospace;
+}
+iframe {
+    width:300px;
+    height:200px;
+    border-radius:5px;
+    display:inline-block;
+    margin:5px;
+    border:0px none;
+}
+div#outp:before {
+    content: "Short description";
+    color: #b5bdd3;
+    top: 10px;
+    display: block;
+    padding-bottom: 10px;
+    font-family: monospace;
+}
+
+div#outp1 {
+    display: inline-block;
+    vertical-align: middle;
+    width:calc(100% - 80px);
+    margin-left:20px;
+    background: #333b48;
+    color: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+    float:left;
+}
+div#outp1:before {
+    display: block;
+    content: "Result";
+    font-family: monospace;
+    color: #b5bdd3;
+}
+
+#ouip {
+    border: 2px solid slategrey;
+    border-radius: 10px;
+    max-width:80vw;
+    float:right;
+}
+    img {
+        max-width:80vw;
+    }
+#maIN {
+    background:#171a1f;
+    padding:15px;
+    width:calc(100% - 60px);
+    margin:15px;
+    border:1px solid slategrey;
+    caret-color:#2d3f5e;
+    border-radius:5px;
+    color:white;
+}
+
+#maIN::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+
+#maIN:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+}
+
+#maIN::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+}
+#sub {
+    color:white;
+    padding:15px;
+    background:#171a1f;
+    margin-left:15px;
+    border-radius:5px;
+    border:2px solid grey;
+    cursor:pointer;
+}
+#sub:active {
+    opacity:0.7;
+}
+</style>
+</body>
+
+</html>
