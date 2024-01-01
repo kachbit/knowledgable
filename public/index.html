@@ -92,7 +92,7 @@ class SpartanStrong {
     }
     WPtext(encodedINPUT) {
         this.Shortendpoint = `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=7&prop=extracts&titles=`;
-        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + this.Shortendpoint + encodedINPUT;
+        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + encodeURIComponent(this.Shortendpoint + encodedINPUT);
         console.log(this.URLgenerated)
         fetch(this.URLgenerated).then(response => response.json()).then((data) => {
             if(data.query.pages[Object.keys(data.query.pages)[0]].extract) {
@@ -112,7 +112,7 @@ class SpartanStrong {
     }
     WPimg(encodedINPUT) {
         this.Shortendpoint = `https://en.wikipedia.org/w/api.php?action=query&redirects=7&prop=pageimages&format=json&piprop=original&titles=`;
-        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + this.Shortendpoint + encodedINPUT;
+        this.URLgenerated = "https://api.codetabs.com/v1/proxy/?quest=" + encodeURIComponent(this.Shortendpoint + encodedINPUT);
         console.log(this.URLgenerated)
         fetch(this.URLgenerated).then(response => response.json()).then((data) => {
             this.image.src = data.query.pages[Object.keys(data.query.pages)[0]].original.source;
@@ -236,6 +236,8 @@ div#outp1 {
     padding: 20px;
     border-radius: 5px;
     float:left;
+    font-family:arial;
+
 }
 div#outp1:before {
     display: block;
@@ -290,5 +292,4 @@ div#outp1:before {
 }
 </style>
 </body>
-
 </html>
