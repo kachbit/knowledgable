@@ -9,7 +9,9 @@
     <title>Knowledgable</title>
 </head>
 <body>
-
+    <h1 style="color:white; font-family:arial; padding:5px 10px 0px 15px;">Knowledgable Search tool</h1>
+          <div style="font-family:arial;color:white; padding-left: 20px;padding-right: 20px;padding-bottom: 10px">This app works best when you enter a topic or keyword, not a question</div>
+    
 <form method="post" onsubmit="exec(); return false;">
 <input type="text" autocomplete="off" autocapitalize="off" id="maIN" name="main" placeholder="Input any topic, person, place, anything." style="outline:0px none">
 </form>
@@ -268,7 +270,7 @@ div#outp1:before {
 
 #maIN::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: white;
-  opacity: 1; /* Firefox */
+  opacity: 0.5; /* Firefox */
 }
 
 #maIN:-ms-input-placeholder { /* Internet Explorer 10-11 */
@@ -290,6 +292,7 @@ div#outp1:before {
 #sub:active {
     opacity:0.7;
 }
+
 </style>
 </body>
 </html>
