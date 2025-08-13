@@ -6,16 +6,16 @@
     <link rel="apple-touch-icon" href="fav1.png">
     <meta name="apple-mobile-web-app-title" content="knowledgable">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>knowledgable</title>
+    <title>Knowledgable</title>
 </head>
 <body>
 
-<form method="post">
-<input type="text" autocomplete="off" autocapitalize="off" id="maIN" name="main" placeholder="..." style="outline:0px none">
+<form method="post" onsubmit="exec(); return false;">
+<input type="text" autocomplete="off" autocapitalize="off" id="maIN" name="main" placeholder="Input any topic, person, place, anything." style="outline:0px none">
 </form>
 <button id="sub" onclick="exec();">Find</button>
-
-<div id="results" style="display:none">
+<br>
+Note: This app works best when you enter a topic or keyword, not a question<div id="results" style="display:none">
 <div id="outp"></div>
 
 <br>
